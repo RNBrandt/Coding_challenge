@@ -39,13 +39,13 @@ recipient fields for your message, you should be able to send a text message to 
 
 # Submission
 
-- You have been granted access to an individual bitbucket repository. If you do not complete the challenge within your allotted time, your access may expire.  Please contact us if you need additonal time.
+- You have been granted access to an individual bitbucket repository. If you do not complete the challenge within your allotted time, your access may expire.  Please contact us if you need additional time.
 
 - As you work on the challenge, commit your work to a branch other than master.  You can create and start work on a new branch with `git checkout -b your_branch_name`
 
 - Submit your work by creating a pull request to the master branch of your repo.
 
-- Within your pull request, explain your rationale for your approach to the problem.  
+- Within your pull request, explain your rationale for your approach to the problem.
     - Why add those methods or objects?
     - Why modify where you modified, not elsewhere?
 

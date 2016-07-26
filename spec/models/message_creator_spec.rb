@@ -36,6 +36,13 @@ describe MessageCreator do
           body: "hello there"
         }
       end
+      # This is testing to see, if, the recipient is an sms it
+      #1) saves the message
+      #2) sets a secure id
+      #3) doesn't send an email
+      #4) does send an sms.
+      #5) at the moment, it's only doing (#2)
+      #This error is triggered by validations in the message.rb file.
       it {should be_truthy}
       it "saves the message" do
         expect { subject }.to change { creator.message.new_record? }
