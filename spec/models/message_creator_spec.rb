@@ -43,6 +43,7 @@ describe MessageCreator do
       #4) does send an sms.
       #5) at the moment, it's only doing (#2)
       #This error is triggered by validations in the message.rb file.
+      #Twilio needs to be built into the app.
       it {should be_truthy}
       it "saves the message" do
         expect { subject }.to change { creator.message.new_record? }
