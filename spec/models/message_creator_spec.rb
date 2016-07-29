@@ -24,6 +24,9 @@ describe MessageCreator do
         expect { subject }.to change { ActionMailer::Base.deliveries.count }.by(1)
         email = ActionMailer::Base.deliveries.last
         expect(email.body).to match(creator.message.secure_id)
+        p email.body
+        p "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+        p creator.message.secure_id
         expect(email.body).to_not match(/hello there/)
       end
     end

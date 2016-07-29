@@ -9,7 +9,6 @@ class Phone
 
   def clean_number
     number = @number.scan(/\d+/).join
-    p number
     # number[0] = "1" ? number[0] = '' : number
     # number = remove_one(number)
     # p number

@@ -23,12 +23,18 @@ class MessageCreator
     #This will also need to change to allow for Twilio to work
     if email_matcher(@message.recipient)
       MessageMailer.secure_message(@message).deliver_now
+      p @message.body
     elsif phone_matcher(@message.recipient)
       @phone = Phone.new(@message)
+      @message.body = @message.secure_id
       @sms_record = @phone.send_sms(@phone.clean_number, @message.body)
     else
 
     end
+  end
+
+  def create_secure
+
   end
 
   def save_message
@@ -57,7 +63,7 @@ class MessageCreator
     elsif email_matcher(input_params[:recipient_email])
       input_params[:recipient_phone] = nil
     else
-      p "enter a valid phone or email"
+
     end
     input_params
   end
@@ -68,7 +74,7 @@ class MessageCreator
     elsif email_matcher(input_params[:sender_email])
       input_params[:sender_phone] = nil
     else
-      p 'Enter a valid phone number or email'
+
     end
     input_params
   end
