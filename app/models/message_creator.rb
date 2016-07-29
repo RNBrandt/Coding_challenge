@@ -1,4 +1,5 @@
-require 'switcher'
+require 'phone'
+require 'texter'
 class MessageCreator
   #The failures are in this model. Only looking at the sms.  This suggests there's a problem with the sms(params) input.
   # There's no clear way for the program to distinguish between sms and email. It looks like the program was built for email, and is in the process of building sms functionality.
@@ -20,16 +21,20 @@ class MessageCreator
 
   def send_notification
     #This will also need to change to allow for Twilio to work
+    if email_matcher(@message.recipient)
       MessageMailer.secure_message(@message).deliver_now
+    elsif phone_matcher(@message.recipient)
+      @phone = Phone.new(@message)
+      @sms_record = @phone.send_sms(@phone.clean_number, @message.body)
+    else
+
+    end
   end
 
   def save_message
     @message.secure_id = SecureRandom.urlsafe_base64(25)
     @message.save
   end
-# look below for the error, it doesn't look like the sms params are allowed.
-# I'm going to change this to allow sender_phone and recipient phone, with no validation, and a simple repeat of the params, to see what happens.
-# Now that I have the basics of a twilio sms set up.
   def allowed_params(params)
     { sender_email: params[:message][:sender],
       recipient_email: params[:message][:recipient],
@@ -38,20 +43,29 @@ class MessageCreator
       body: params[:message][:body]}
   end
 
+  def phone_matcher(to_check)
+    to_check =~ @phone_format
+  end
+
+  def email_matcher(to_check)
+    to_check =~ @email_format
+  end
+
   def change_recipient(input_params)
-    if input_params[:recipient_phone] =~ @phone_format
+    if phone_matcher(input_params[:recipient_phone])
       input_params[:recipient_email] = nil
-    elsif input_params[:recipient_email] =~ @email_format
+    elsif email_matcher(input_params[:recipient_email])
       input_params[:recipient_phone] = nil
     else
+      p "enter a valid phone or email"
     end
     input_params
   end
 
   def change_sender(input_params)
-    if input_params[:sender_phone] =~ @phone_format
+    if phone_matcher(input_params[:sender_phone])
       input_params[:sender_email] = nil
-    elsif input_params[:sender_email] =~ @email_format
+    elsif email_matcher(input_params[:sender_email])
       input_params[:sender_phone] = nil
     else
       p 'Enter a valid phone number or email'

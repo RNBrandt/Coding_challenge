@@ -8,12 +8,12 @@ module Texter
     @client = Twilio::REST::Client.new acct_sid, auth_token
     # This will change, for better integration.
 
-    from = '+17202592214'
+    from = '+15005550006'
 
     message = @client.account.messages.create(
       :from => from,
-      :to => '+1'+ number
-      :body => 'Change this for better integration'
+      :to => '+1'+ number,
+      :body => body
       )
   end
 end
