@@ -24,9 +24,6 @@ describe MessageCreator do
         expect { subject }.to change { ActionMailer::Base.deliveries.count }.by(1)
         email = ActionMailer::Base.deliveries.last
         expect(email.body).to match(creator.message.secure_id)
-        p email.body
-        p "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-        p creator.message.secure_id
         expect(email.body).to_not match(/hello there/)
       end
     end
@@ -67,7 +64,7 @@ describe MessageCreator do
       end
     end
 
-    context "with bad params" do
+    context "with bad sender params" do
       let(:message_params) {{
         sender: nil,
         recipient: "sad@example.com"
@@ -80,6 +77,22 @@ describe MessageCreator do
         expect { subject }.to_not change { Message.count }
       end
     end
+
+    context "with bad recipient params" do
+      let(:message_params) {{
+        sender: "+14155551212",
+        recipient: nil,
+        body: "Nope"
+        }}
+        it { should be_falsey }
+      it "should not send email" do
+        expect { subject }.to_not change { ActionMailer::Base.deliveries.count }
+      end
+      it "should not make a message" do
+        expect { subject }.to_not change { Message.count }
+      end
+    end
   end
+
 
 end

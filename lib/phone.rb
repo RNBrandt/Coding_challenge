@@ -1,22 +1,24 @@
-require 'texter'
+
 class Phone
   # a class to take a number and turn it into a 10 digit number string
   #Don't forget to write tests for this
-  include Texter
+  attr_reader :number
   def initialize(message_object)
     @number = message_object.recipient_phone
   end
 
-  def clean_number
-    number = @number.scan(/\d+/).join
-    # number[0] = "1" ? number[0] = '' : number
-    # number = remove_one(number)
-    # p number
-    number unless number.length != 10
-  end
-  def remove_one(number)
-    if number[0] == "1"
-      number[0] = ''
-    end
+  def send_sms(number, body)
+    acct_sid = ENV['TWILIO_ACCT_SID']
+    auth_token = ENV['TWILIO_AUTH']
+
+    @client = Twilio::REST::Client.new acct_sid, auth_token
+
+    from = '+15005550006'
+
+    message = @client.account.messages.create(
+      :from => from,
+      :to => '+1'+ number,
+      :body => body
+      )
   end
 end
