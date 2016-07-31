@@ -9,35 +9,41 @@ class MessageCreator
   end
 
   def ok?
+    # This is one of my favorite bits of code.  22 tests fail when this order is switched!
     save_message && send_notification
   end
 
   private
 
   def send_notification
-    #This will also need to change to allow for Twilio to work
     if email_match?(@message.recipient)
-      MessageMailer.secure_message(@message).deliver_now
+      mail_message
     elsif phone_match?(@message.recipient)
-      @phone = Phone.new(@message)
-      @message.body = @message.secure_id
-      @sms_record = @phone.send_sms(@phone.number, @message.body)
+      send_sms
     else
 
     end
+  end
+
+  def mail_message
+    MessageMailer.secure_message(@message).deliver_now
+  end
+
+  def send_sms
+    @phone = Phone.new(@message)
+    @message.body = @message.secure_id
+    @sms_record = @phone.send_sms(@phone.number, @message.body)
   end
 
   def save_message
     @message.secure_id = SecureRandom.urlsafe_base64(25)
     @message.save
   end
-# look below for the error, it doesn't look like the sms params are allowed.
-# I'm going to change this to allow sender_phone and recipient phone, with no validation, and a simple repeat of the params, to see what happens.
-# Now that I have the basics of a twilio sms set up.
+
   def allowed_params(params)
     { sender_email: params[:message][:sender],
-      recipient_email: params[:message][:recipient],
       sender_phone: params[:message][:sender],
+      recipient_email: params[:message][:recipient],
       recipient_phone: params[:message][:recipient],
       body: params[:message][:body]}
   end

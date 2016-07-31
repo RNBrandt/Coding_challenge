@@ -32,9 +32,9 @@ describe MessagesController do
 
     it { should redirect_to(new_message_path)}
 
-    context "with bad params" do
+    context "without a body" do
       let(:message_params) {{
-        sender: nil,
+        sender: "test1@example.com",
         recipient: "test2@example.com",
         body: nil
       }}
@@ -44,6 +44,44 @@ describe MessagesController do
         expect(assigns[:message].errors).to be_present
       end
     end
-  end
 
+    context "without a recipient" do
+      let(:message_params) {{
+        sender: "+14155551212",
+        recipient: nil,
+        body: "Hello"
+      }}
+      it { should render_template("messages/new")}
+      it "shows errors on the message" do
+        subject
+        expect(assigns[:message].errors).to be_present
+      end
+    end
+
+    context "without an invalid sender" do
+      let(:message_params) {{
+        sender: "neither number or mail",
+        recipient: "test2@example.com",
+        body: "Hi there"
+      }}
+      it { should render_template("messages/new")}
+      it "shows errors on the message" do
+        subject
+        expect(assigns[:message].errors).to be_present
+      end
+    end
+
+    context "without an invalid recipient" do
+      let(:message_params) {{
+        sender: "test2@example.com",
+        recipient: "Neither number nor mail",
+        body: "Hi there"
+      }}
+      it { should render_template("messages/new")}
+      it "shows errors on the message" do
+        subject
+        expect(assigns[:message].errors).to be_present
+      end
+    end
+  end
 end

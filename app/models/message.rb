@@ -8,13 +8,13 @@ class Message < ActiveRecord::Base
 
   def neither_email_or_phone_sender
     if !:sender_email && !:sender_phone
-      errors.add(:sender_email, "There must be at least one sender")
+      errors.add(:message, "There must be at least one sender")
     end
   end
 
   def neither_email_or_phone_recipient
     if !:recipient_email && !:recipient_phone
-      errors.add(:recipient_email, "There must be at least one sender")
+      errors.add(:message, "There must be at least one sender")
     end
   end
 
