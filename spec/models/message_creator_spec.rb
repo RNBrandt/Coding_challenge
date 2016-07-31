@@ -26,6 +26,13 @@ describe MessageCreator do
         expect(email.body).to match(creator.message.secure_id)
         expect(email.body).to_not match(/hello there/)
       end
+      it "does not save phone values" do
+        expect {creator.message.recipient_email.to be_nil}
+        expect {creator.message.sender_email.to be_nil}
+      end
+      it "Does not send an SMS" do
+        expect(creator.sms_record).to_not be_present
+      end
     end
 
     context "with sms params" do
@@ -36,14 +43,6 @@ describe MessageCreator do
           body: "hello there"
         }
       end
-      # This is testing to see, if, the recipient is an sms it
-      #1) saves the message
-      #2) sets a secure id
-      #3) doesn't send an email
-      #4) does send an sms.
-      #5) at the moment, it's only doing (#2)
-      #This error is triggered by validations in the message.rb file.
-      #Twilio needs to be built into the app.
       it {should be_truthy}
       it "saves the message" do
         expect { subject }.to change { creator.message.new_record? }
@@ -52,6 +51,8 @@ describe MessageCreator do
         expect { subject }.to change { creator.message.secure_id }
       end
       it "does not send email" do
+        expect {creator.message.recipient_email.to be_nil}
+        expect {creator.message.sender_email.to be_nil}
         expect { subject }.to_not change { ActionMailer::Base.deliveries.count }
       end
       it "sends an SMS with a secure link" do
@@ -59,6 +60,7 @@ describe MessageCreator do
         expect(creator.sms_record).to be_present
         expect(creator.sms_record).to be_a(Twilio::REST::Message)
         expect(creator.sms_record.to).to eq("+14155551212")
+        expect(creator.sms_record.from).to eq("+15005550006")
         expect(creator.sms_record.body).to match(creator.message.secure_id)
         expect(creator.sms_record.body).to_not match(/hello there/)
       end

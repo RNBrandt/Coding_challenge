@@ -58,7 +58,7 @@ describe MessagesController do
       end
     end
 
-    context "without an invalid sender" do
+    context "with an invalid sender" do
       let(:message_params) {{
         sender: "neither number or mail",
         recipient: "test2@example.com",
@@ -71,7 +71,7 @@ describe MessagesController do
       end
     end
 
-    context "without an invalid recipient" do
+    context "with an invalid recipient" do
       let(:message_params) {{
         sender: "test2@example.com",
         recipient: "Neither number nor mail",

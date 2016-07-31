@@ -1,4 +1,4 @@
-require 'phone'
+require 'messager'
 require 'cleaner'
 include Cleaner
 class MessageCreator
@@ -21,7 +21,7 @@ class MessageCreator
     elsif phone_match?(@message.recipient)
       send_sms
     else
-
+      raise ArgumentError, 'Messages cannot be sent unless there is a valid recipient'
     end
   end
 
@@ -30,9 +30,9 @@ class MessageCreator
   end
 
   def send_sms
-    @phone = Phone.new(@message)
+    @sms = Messager.new(@message)
     @message.body = @message.secure_id
-    @sms_record = @phone.send_sms(@phone.number, @message.body)
+    @sms_record = @sms.send_sms(@sms.number, @message.body)
   end
 
   def save_message
