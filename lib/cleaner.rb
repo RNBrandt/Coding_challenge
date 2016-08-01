@@ -21,13 +21,13 @@ module Cleaner
   private
 
   def change_recipient(input_params)
-    #This and it's brother (change_sender), have caused me some consternation.  In the event that a sender/ or receiver is not properly input or formatted, I want to short circuit the attempt at saving a message.  The model won't allow it, neither will the 'send_message' method (which will throw an argument error if it gets there), so the integrity of the app is ok.  It's just unnecessary computing time. Unfortunately, I haven't found a good way to short-circuit that process,  send the user a useful message, and not break the entirety of the program/ testing setup.  Since it works very well as is, I'm going to leave it this way, but I'm curious how other engineers solve this.
+    #This and it's brother (change_sender), have caused me some consternation.  In the event that a sender/ or receiver is not properly input or formatted, I want to short circuit the attempt at saving a message.  The model won't allow it, neither will the 'send_message' method (which will throw an exception if it somehow gets there), so the integrity of the app is ok.  It's just unnecessary computing time. Unfortunately, I haven't found a good way to short-circuit that process,  send the user a useful message, and not break the entirety of the program/ testing setup.  Since it works very well as is, I'm going to leave it this way, but I'm curious how other engineers solve this.
     if phone_match?(input_params[:recipient_phone])
       input_params[:recipient_email] = nil
     elsif email_match?(input_params[:recipient_email])
       input_params[:recipient_phone] = nil
     else
-      p "A Recipient was not properly input. This message will not save in the Database"
+      p "A Recipient was not input properly. This message will not save in the Database"
     end
     input_params
   end
@@ -38,7 +38,7 @@ module Cleaner
     elsif email_match?(input_params[:sender_email])
       input_params[:sender_phone] = nil
     else
-      p "A Sender was not properly input. This message will not save in the Database"
+      p "A Sender was not input properly. This message will not save in the Database"
     end
     input_params
   end

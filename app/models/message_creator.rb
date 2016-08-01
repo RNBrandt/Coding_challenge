@@ -16,13 +16,18 @@ class MessageCreator
   private
 
   def send_notification
+    sender_present
     if email_match?(@message.recipient)
       mail_message
     elsif phone_match?(@message.recipient)
       send_sms
     else
-      raise ArgumentError, 'Messages cannot be sent unless there is a valid recipient'
+      raise 'Messages cannot be sent unless there is a valid recipient'
     end
+  end
+
+  def sender_present
+    raise 'Messages cannot be sent unless there is a valid sender' unless  (@message.sender_phone || @message.sender_email)
   end
 
   def mail_message
